@@ -2,7 +2,7 @@
  * Based on the Hypermedia UDP library by Cousot Stephane and Douglas Edric Stanley
  * 
  * included and namespaced in this library to minimize external dependencies
- 
+ *
  * THIS LIBRARY IS RELEASED UNDER A CREATIVE COMMONS LICENSE BY.
  * -> http://creativecommons.org/licenses/by/2.5/
  */
@@ -146,7 +146,7 @@ public class L3D_UDP implements Runnable {
 		// if it's used with Processing
 		try {
 			if ( owner instanceof PApplet ) 
-				((PApplet)owner).registerDispose( this );
+				((PApplet)owner).registerMethod( "dispose", this );
 		}
 		catch( NoClassDefFoundError e ) {;}
 		
@@ -689,8 +689,8 @@ public class L3D_UDP implements Runnable {
 	 */
 	private void callTimeoutHandler() {
 		try {
-			Method m = owner.getClass().getDeclaredMethod(timeoutHandler, null);
-			m.invoke( owner, null );
+			Method m = owner.getClass().getDeclaredMethod(timeoutHandler);
+			m.invoke( owner );
 		}
 		catch( NoSuchMethodException e )		{;}
 		catch( IllegalAccessException e )		{ error(e.getMessage()); }

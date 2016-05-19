@@ -100,8 +100,8 @@ public class L3D {
 	public L3D(PApplet _parent, int _side) {
 		super();
 		side=_side;
-		scale=parent.height/side/3;
 		parent = _parent;
+		scale=parent.height/side/3;
 		parent.registerMethod("draw", this);
 		parent.registerMethod("mouseEvent", this);
 		welcome();
@@ -117,8 +117,8 @@ public class L3D {
 			side=y;
 		else if((z>=x)&&(z>=y))
 			side=z;
-		scale=parent.height/side/3;
 		parent = _parent;
+		scale=parent.height/side/3;
 		parent.registerMethod("draw", this);
 		parent.registerMethod("mouseEvent", this);
 		welcome();
