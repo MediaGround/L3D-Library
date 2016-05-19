@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<project name="L3D" default="jar" basedir="." >
+
+	<property name="processing.dir" value="C:/processing-3.0.2"/>
+
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="classes.dir" value="${basedir}/classes" />
+	<property name="jar.dir" value="${basedir}/library" />
+	<property name="javadoc.dir" value="${basedir}/reference" />
+
+	<target name="compile" >
+		<mkdir dir="${classes.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${classes.dir}">
+			<classpath>
+				<fileset dir="${jar.dir}">
+					<include name="**/*.jar"/>
+					<exclude name="L3D.jar"/>
+				</fileset>
+				<fileset dir="${processing.dir}/core/library">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar jarfile="${jar.dir}/L3D.jar"
+			basedir="${classes.dir}"
+			includes="**/*.class"/>
+	</target>
+
+	<target name="javadoc" depends="compile, jar" >
+		<javadoc
+			sourcepath="${src.dir}"
+			windowtitle="L3D"
+			destdir="${javadoc.dir}"
+		/>
+	</target>
+
+	<target name="clean" >
+		<delete dir="${classes.dir}/classes/*"/>
+		<delete dir="${jar.dir}/L3D.jar"/>
+		<delete dir="${javadoc.dir}/*"/>
+	</target>
+
+</project>
