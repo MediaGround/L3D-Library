@@ -54,23 +54,23 @@ import java.io.FileReader;
 public class L3D {
 
 	// parent is a reference to the parent sketch
-	private static PApplet parent;
+	private PApplet parent;
 	//public Serial serial;
-	public static Streaming stream;
-	public static Spark spark;
-	public static Text text;
+	public Streaming stream;
+	public Spark spark;
+	public Text text;
 	public final static String VERSION = "2.0.0";
-	private static boolean drawCube;
-	public static int side = 8;
-	public static int size;
-	public static PVector dimensions;
-	public static int scale = 20;
-	public static double xAngle=-0.15;
-	public static double yAngle=0.39;
+	private boolean drawCube;
+	public int side = 8;
+	public int size;
+	public PVector dimensions;
+	public int scale = 20;
+	public double xAngle=-0.15;
+	public double yAngle=0.39;
 	public boolean pose=false;
-	public static int[][][] cube;
-	public static PVector center;
-	public static boolean manualUpdate = true;
+	public int[][][] cube;
+	public PVector center;
+	public boolean manualUpdate = true;
 
 	/**
 	 * This is the simplest constructor for the cube -- it's only used for local
@@ -231,19 +231,19 @@ public class L3D {
 	}
 	
 	// multicast streaming to default port 2222
-	public static void enableMulticastStreaming() {
+	public void enableMulticastStreaming() {
 		stream = new Streaming();
 		manualUpdate = false;
 	}
 
 	// multicast streaming, user specifies the port number
-	public static void enableMulticastStreaming(int port) {
+	public void enableMulticastStreaming(int port) {
 		stream = new Streaming(port);
 		manualUpdate = false;
 	}
 
 	// direct streaming method -- streams to default port, 2222
-	public static void streamToCore(String name) {
+	public void streamToCore(String name) {
 		String IPAddress = spark.getAddress(name);
 		stream = new Streaming(IPAddress);
 		System.out.println("streaming to core " + name
@@ -252,17 +252,17 @@ public class L3D {
 	}
 
 	// direct streaming method -- user specifies the port number
-	public static void streamToCore(int port, String name) {
+	public void streamToCore(int port, String name) {
 		String IPAddress = spark.getAddress(name);
 		stream = new Streaming(port, IPAddress);
 			manualUpdate = false;
 	}
 
-	public static void setManualStreaming() {
+	public void setManualStreaming() {
 		manualUpdate = true;
 	}
 
-	public static void setAutomaticStreaming() {
+	public void setAutomaticStreaming() {
 		manualUpdate = false;
 	}
 
@@ -304,35 +304,35 @@ public class L3D {
 	// users can call this if they want to control exactly when a cube is
 	// updated
 	// there is a boolean flag called manualUpdate -- if it's true
-	public static void update() {
+	public void update() {
 		stream.sendData(cube);
 	}
 
-	public static void setVoxel(int x, int y, int z, int col) {
+	public void setVoxel(int x, int y, int z, int col) {
 		if ((x >= 0) && (x < dimensions.x))
 			if ((y >= 0) && (y < dimensions.y))
 				if ((z >= 0) && (z < dimensions.z))
 					cube[x][y][z] = col;
 	}
 	
-	public static void setVoxel(double x, double y, double z, int col) {
+	public void setVoxel(double x, double y, double z, int col) {
 		setVoxel((int)x,(int)y,(int)z,col);
 	}
 	
-	public static void setVoxel(int x, int y, int z, int r, int g, int b) {
+	public void setVoxel(int x, int y, int z, int r, int g, int b) {
 		setVoxel(x,y,z,parent.color(r, g, b));
 	}
 
-	public static void setVoxel(PVector p, int col) {
+	public void setVoxel(PVector p, int col) {
 		setVoxel((int)p.x,(int)p.y,(int)p.z, col);
 	}
 
-	public static void setVoxel(PVector p, int r, int g, int b) {
+	public void setVoxel(PVector p, int r, int g, int b) {
 		setVoxel((int)p.x,(int)p.y,(int)p.z, parent.color(r,g,b));
 	}
 
 	//adds the color col to the existing voxel color
-	public static void addVoxel(double x, double y, double z, int col) {
+	public void addVoxel(double x, double y, double z, int col) {
 		x = Math.round(x);
 		y = Math.round(y);
 		z = Math.round(z);
@@ -399,13 +399,13 @@ public class L3D {
 	 * @param col -- the color of the text
 	 *            
 	 */
-	public void marquis(String message, float initialPosition, int col)
-	{
+	public void marquis(String message, float initialPosition, int col) {
 		text.marquis(message, initialPosition, col);
 	}
 	
-	 public static int color(int r, int g, int b) {
-		 return((int)(r*Math.pow(2,16)+g*Math.pow(2,8)+b)); }
+	 public int color(int r, int g, int b) {
+		 return((int)(r*Math.pow(2,16)+g*Math.pow(2,8)+b));
+	}
 	 
 	// draw the cube to the screen
 	public void enableDrawing() {
@@ -423,7 +423,7 @@ public class L3D {
 			// create a temporary file
 			String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss")
 					.format(Calendar.getInstance().getTime());
-			timeLog = parent.sketchPath + "/" + timeLog + ".L3D";
+			timeLog = parent.sketchPath(timeLog + ".L3D");
 			File logFile = new File(timeLog);
 
 			// This will output the full path where the file will be written
@@ -457,7 +457,7 @@ public class L3D {
 				// create a temporary file
 				String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss")
 						.format(Calendar.getInstance().getTime());
-				timeLog = parent.sketchPath + "/" + timeLog + "-bin.L3D";
+				timeLog = parent.sketchPath(timeLog + "-bin.L3D");
 				File logFile = new File(timeLog);
 
 				// This will output the full path where the file will be written
@@ -574,7 +574,7 @@ public class L3D {
 	// p1 and p2 can be outside of the cube, but it will only draw the parts of
 	// the line that fall
 	// inside the cube
-	public static void line(PVector p1, PVector p2, int col) {
+	public void line(PVector p1, PVector p2, int col) {
 		// thanks to Anthony Thyssen for the original write of Bresenham's line
 		// algorithm in 3D
 		// http://www.ict.griffith.edu.au/anthony/info/graphics/bresenham.procs
@@ -652,7 +652,7 @@ public class L3D {
 
 	// draws a hollow  centered around the 'center' PVector, with radius
 	// radius and color col
-	public static void sphere(PVector center, float radius, int col) {
+	public void sphere(PVector center, float radius, int col) {
 		float res = 30;
 		for (float m = 0; m < res; m++)
 			for (float n = 0; n < res; n++)
@@ -665,7 +665,7 @@ public class L3D {
 						col);
 	}
 
-	public static void background(int col) {
+	public void background(int col) {
 		for (int x = 0; x < dimensions.x; x++)
 			for (int y = 0; y < dimensions.y; y++)
 				for (int z = 0; z < dimensions.z; z++)
@@ -674,12 +674,12 @@ public class L3D {
 
 	// returns the color (represented as an int) at the integer location closest
 	// to the PVector point
-	public static int getVoxel(PVector p) {
+	public int getVoxel(PVector p) {
 		return getVoxel((int) p.x,(int) p.y,(int) p.z);
 	}
 
 	// returns the color (represented as an int) at the x,y,z location
-	public static int getVoxel(int x, int y, int z) {
+	public int getVoxel(int x, int y, int z) {
 		return cube[x][y][z];
 	}
 	
@@ -702,9 +702,9 @@ public class L3D {
 	
 	  // This method is called automatically every loop
 	  // becasue we have registerMouseEvent(this object)
-	  public void mouseEvent(MouseEvent event){
+	 public void mouseEvent(MouseEvent event){
 
-		  switch (event.getAction()) {
+		 switch (event.getAction()) {
 		    case MouseEvent.PRESS:
 		      // do something for the mouse being pressed
 		      break;
@@ -720,11 +720,11 @@ public class L3D {
 				
 		      // do something for mouse dragged
 		      break;
-		  }
-	  }
+		 }
+	}
 	    
 	  
-	public static int colorMap(float val, float min, float max) {
+	public int colorMap(float val, float min, float max) {
 		float range = 1024;
 		val = parent.map(val, min, max, 0, range);
 		int colors[] = new int[6];
